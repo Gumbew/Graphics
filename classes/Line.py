@@ -2,9 +2,10 @@ from classes.Point import Point
 
 
 class Line(object):
-    def __init__(self, begin, end):
+    def __init__(self, begin, end, color="black"):
         self.begin = begin
         self.end = end
+        self.color = color
 
     def __str__(self):
         return "{%s - %s}" % (self.begin, self.end)
@@ -35,4 +36,4 @@ class Line(object):
         return ab.cross(ap) >= 0
 
     def morph(self, t_begin, t_end):
-        return Line(self.begin.add(self.direction.mul(t_begin)), self.begin.add(self.direction.mul(t_end)))
+        return Line(self.begin.add(self.direction.mul(t_begin)), self.begin.add(self.direction.mul(t_end)), self.color)

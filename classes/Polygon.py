@@ -1,11 +1,14 @@
 from classes.Line import Line
+from classes.Point import Point
 
 
 class Polygon(object):
-    def __init__(self, points, priority):
+    def __init__(self, points, priority, color):
         self.count = len(points)
         self.edges = []
         self.priority = priority
+        self.color = color
+
         for i in range(self.count - 1):
             self.edges.append(Line(points[i], points[i + 1]))
 
@@ -62,12 +65,14 @@ class Polygon(object):
             return False, l
 
         l = l.morph(t_begin, t_end)
+
         return True, l
 
     def cyruse_beck_out(self, l):
         t_begin = 0.0
         t_end = 1.0
         dir_l = l.direction
+        lines = list()
 
         for edge in self.edges:
             if edge.normal.dot(dir_l) < 0:
@@ -84,8 +89,15 @@ class Polygon(object):
                 if not edge.on_left(l.begin):
                     return False, l
 
-        l = l.morph(t_begin, t_end)
+        b = l.morph(t_begin, t_end)
+
         if t_begin > t_end:
             return False, l
 
-        return True, l
+        if l.begin.x != b.begin.x and l.begin.y != b.begin.y:
+            lines.append(Line(Point(l.begin.x, l.begin.y), Point(b.begin.x, b.begin.y), l.color))
+
+        if l.end.x != b.end.x and l.end.y != b.end.y:
+            lines.append(Line(Point(l.end.x, l.end.y), Point(b.end.x, b.end.y), l.color))
+
+        return True, lines
